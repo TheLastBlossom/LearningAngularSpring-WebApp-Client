@@ -1,0 +1,82 @@
+<ul class="alert alert-danger" *ngIf="errors.length > 0">
+    <li *ngFor="let err of errors">
+        {{err}}
+    </li>
+</ul>
+<div class="card bg-dark text-white col-sm-6 mt-4" style="margin: auto;">
+    <div class="card-header">
+        {{title}}
+    </div>
+    <div class="card-body">
+        <form #myForm="ngForm">
+            <div class="form-group row mb-3">
+                <label for="name" class="col-form-label col-sm-2">Name:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="client.name" id="name" name="name"
+                        #name="ngModel"><!--required minlength="4"-->
+                    <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+                        <ng-container *ngIf="name.hasError('required')">
+                            Name is required.
+                        </ng-container>
+                        <ng-container *ngIf="name.hasError('minlength')">
+                            Name has to have at least 4 characters
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <label for="surname" class="col-form-label col-sm-2">Surname:</label>
+                <div class="col-sm-6">
+                    <input type="text" name="surname" class="form-control" [(ngModel)]="client.surname" id="surname"
+                        #surname="ngModel"> <!--required-->
+                    <div *ngIf="surname.invalid && (surname.dirty || surname.touched)" class="alert alert-danger">
+                        <div *ngIf="surname.hasError('required')">
+                            Surname is required
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <label for="email" class="col-form-label col-sm-2">Email:</label>
+                <div class="col-sm-6">
+                    <input type="email" class="form-control" [(ngModel)]="client.email" id="email" name="email"
+                        #email="ngModel"><!--required email-->
+                    <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
+                        <div *ngIf="email.hasError('required')">
+                            Email is required
+                        </div>
+                        <div *ngIf="email.hasError('email')">
+                            Email not valid
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <label for="createAt" class="col-form-label col-sm-2">createAt:</label>
+                <div class="col-sm-6">
+                    <input type="date" name="createAt" class="form-control" [(ngModel)]="client.createAt" id="createAt">
+                    <!--required-->
+                </div>
+            </div>        
+            <div class="form-group row mb-3">
+                <label for="regions" class="col-form-label col-sm-2">Regions:</label>
+                <div class="col-sm-6">
+                    <select [compareWith]="compareRegion" class="form-select" name="regions"  [(ngModel)]="client.region">    
+                        <option [ngValue]="undefined">--Select region--</option>                    
+                        <option value="region" *ngFor="let region of regions" [ngValue]="region">{{region.region}}</option>                    
+                    </select>                
+                </div>                
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <button type="submit" class="btn btn-primary" (click)="create()" role="button"
+                        *ngIf="!client.id else elseBlock" [disabled]="!myForm.form.valid">Save</button>
+                    <ng-template #elseBlock>
+                        <button class="btn btn-primary" role="button" (click)="update()"
+                            [disabled]="!myForm.form.valid">Update</button>
+                    </ng-template>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
