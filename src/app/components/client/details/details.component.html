@@ -1,0 +1,80 @@
+<div class="open-modal animation fadeIn" *ngIf="getModalStatus()">
+    <div class="modal" id="exampleModal" tabindex="-1" style="display: block;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Clients</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        (click)="closeModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <button type="button" class="btn btn-success btn-sm" [routerLink]="['/bills/form/', client.id]">Create bill</button>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm">
+                                <ul class="list-group text-dark" *ngIf="client !=null">
+                                    <li class="list-group-item bg-success text-white">{{client.name}}</li>
+                                    <li class="list-group-item">{{client.surname}}</li>
+                                    <li class="list-group-item">{{client.email}}</li>
+                                    <li class="list-group-item">{{client.createAt|date:"fullDate"}}</li>
+                                    <li class="list-group-item">{{client.region?.region}}</li>
+                                </ul>
+                                <div class="input-group mt-2" *ngIf="authService.hasRole('ROLE_ADMIN')">
+                                    <input type="file" class="form-control" id="inputGroupFile04"
+                                        aria-describedby="inputGroupFileAddon04" aria-label="Upload"
+                                        (change)="selectPhoto($event)">
+                                    <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04"
+                                        (click)="uploadPhoto()">Upload</button>
+                                </div>
+                                <div class="progress mt-1" role="progressbar" aria-label="Success example"
+                                    attr.aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100"
+                                    *ngIf="progress !=0">
+                                    <div class="progress-bar bg-success" [ngStyle]="{width: progress+'%'}">{{progress}}%
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <img src="http://localhost:8080/api/uploads/img/{{client.photo}}" style=" max-width: 100%; /* La imagen no será más ancha que el contenedor */
+                                max-height: 100%;" alt="" *ngIf="client?.photo !=null">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="alert alert-info my-4" *ngIf="client.bills.length == 0">
+                                There is no bill assigned to the client {{client.name}} {{client.surname}}
+                            </div>
+                            <table class="table table-bordered table-striped my-4" *ngIf="client.bills.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>Folio</th>
+                                        <th>Description</th>
+                                        <th>Date</th>
+                                        <th>Total</th>
+                                        <th>Details</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let bill of client.bills">
+                                        <td>{{bill.id}}</td>
+                                        <td>{{bill.description}}</td>
+                                        <td>{{bill.createdAt}}</td>
+                                        <td>{{bill.total}}</td>
+                                        <td><button class="btn btn-primary btn-sm" type="button" [routerLink]="['/bills', bill.id]">Show</button></td>
+                                        <td><button class="btn btn-danger btn-sm" type="button" (click)="deleteBill(bill)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
